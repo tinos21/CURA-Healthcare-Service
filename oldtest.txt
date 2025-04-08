@@ -1,0 +1,17 @@
+""""
+import pytest
+
+
+@pytest.mark.usefixtures("setup_driver")
+class TestSample:
+    def test_open_browser(self):
+        # Check if the driver is initialized properly and the page is opened
+        ## assert self.driver.title == "eBay"  ## ebay was the name .title shows "Electronics,...& More | eBay' in console
+        assert 'eBay' in self.driver.title
+
+    def test_wait_object(self):
+        # Check if the wait object is initialized properly
+        assert self.wait is not None
+
+
+""""
