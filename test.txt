@@ -1,8 +1,0 @@
-
-
-
- appointment.select_apply_for_hospital_readmission_checkmark()
-
-        appointment.calendar("08/04/2025")
-        appointment.write_in_comment_box("hello my name is tino i would like to schedule an appointment")
-        appointment.click_book_appointment()
