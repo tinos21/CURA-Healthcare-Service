@@ -13,7 +13,6 @@ from pages.login_page import LoginPage
 @pytest.mark.usefixtures("setup_driver")
 class TestLoginSuite:
 
-
     @pytest.mark.order(1)
     @pytest.mark.smoke
     def test_001_invalid_login(self):
@@ -36,6 +35,7 @@ class TestLoginSuite:
         time.sleep(5)
 
    ## @pytest.mark.dependency(name="login_success")
+
     @pytest.mark.order(2)
     @pytest.mark.regression
     def test_002_valid_login(self):
@@ -57,18 +57,41 @@ class TestLoginSuite:
         assert h2_tag_2.text == "Make Appointment", f"expected 'Make Appointment' but got {h2_tag_2.text}"
         time.sleep(1)
 
+    @pytest.mark.smoke
     @pytest.mark.order(3)
-    def test_003_valid_appointment_schedulling(self):
+    def test_003_invalid_appointment_scheduling(self):
         appointment = AppointmentPage(self.driver, self.wait)
         appointment.click_facility_dropdown()
         time.sleep(4)
         appointment.select_apply_for_hospital_readmission_checkmark()
         appointment.click_medicare_radio_button()
+        ##appointment.calendar("08/04/2025")
+        appointment.write_in_comment_box("hello my name is tino i would like to schedule an appointment")
+        time.sleep(4)
+        appointment.click_book_appointment()
+        time.sleep(5)
+        h2_tag_3 = self.driver.find_element(By.TAG_NAME, 'h2') ## select a locator for text on top of page
+        assert h2_tag_3.text == "Make Appointment", f"expected 'Make Appointment' but got {h2_tag_3.text}"
+
+    @pytest.mark.regression
+    @pytest.mark.order(4)
+    def test_004_valid_appointment_scheduling(self):
+        appointment = AppointmentPage(self.driver, self.wait)
+        self.driver.refresh()  ## need to reload
+        appointment.click_facility_dropdown() ## Selecting
+        time.sleep(4)
+        appointment.select_apply_for_hospital_readmission_checkmark() ## checking the check mark
+        appointment.click_medicare_radio_button() ### selecting the radio button
         appointment.calendar("08/04/2025")
         appointment.write_in_comment_box("hello my name is tino i would like to schedule an appointment")
         time.sleep(4)
         appointment.click_book_appointment()
         time.sleep(5)
+        h2_tag_4 = self.driver.find_element(By.TAG_NAME, 'h2') ## after valid scheduling Appointment Confirmation
+        assert h2_tag_4.text == "Appointment Confirmation", f"expected 'Appointment Confirmation' but got {h2_tag_4.text}" ## making sure we the test pass
+        redirect = self.driver.find_element(By.CLASS_NAME,"btn btn-default")
+        redirect.click() ## click
+
 
 
 

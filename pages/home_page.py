@@ -11,9 +11,10 @@ class HomePage:
         make_appointment_button.click()
 
     def click_menu_and_go_home(self):
-        pass  # Add locator and interaction logic here
+        pass
 
     def click_menu_and_login(self):
         pass
+
 
 

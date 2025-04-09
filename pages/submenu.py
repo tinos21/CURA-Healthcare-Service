@@ -1,6 +1,6 @@
 
 
-
+### this class is the task on a submenu
 class SubMenu:
     def __init__(self, driver, wait):
         self.driver = driver
@@ -18,7 +18,6 @@ class SubMenu:
     def click_logout(self):
         pass
 
-    def click_login(self):  # Optional if login is in the hamburger
+    def click_login(self):
         pass
 
-    
