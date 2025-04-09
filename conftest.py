@@ -24,7 +24,6 @@ def setup_driver(request):
 
     # Initialize WebDriver with the service object and options
     driver = webdriver.Chrome(service=service, options=options)
-
     wait = WebDriverWait(driver, 15)
 
 

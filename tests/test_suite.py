@@ -3,10 +3,13 @@ import time
 import pytest
 from selenium.webdriver.common.by import By
 
-
+from pages.appointment_page import AppointmentPage
 from pages.home_page import HomePage
 from pages.login_page import LoginPage
 
+
+
+@pytest.mark.dependency()
 @pytest.mark.usefixtures("setup_driver")
 class TestLoginSuite:
 
@@ -32,7 +35,7 @@ class TestLoginSuite:
         assert h2_tag_2.text == "Login failed! Please ensure the username and password are valid.", f"expected 'Login failed! Please ensure the username and password are valid.' but got {h2_tag_2.text}"
         time.sleep(5)
 
-
+   ## @pytest.mark.dependency(name="login_success")
     @pytest.mark.order(2)
     @pytest.mark.regression
     def test_002_valid_login(self):
@@ -52,7 +55,23 @@ class TestLoginSuite:
         h2_tag_2 = self.driver.find_element(By.TAG_NAME, 'h2') ## locating the second element
 
         assert h2_tag_2.text == "Make Appointment", f"expected 'Make Appointment' but got {h2_tag_2.text}"
+        time.sleep(1)
+
+    @pytest.mark.order(3)
+    def test_003_valid_appointment_schedulling(self):
+        appointment = AppointmentPage(self.driver, self.wait)
+        appointment.click_facility_dropdown()
+        time.sleep(4)
+        appointment.select_apply_for_hospital_readmission_checkmark()
+        appointment.click_medicare_radio_button()
+        appointment.calendar("08/04/2025")
+        appointment.write_in_comment_box("hello my name is tino i would like to schedule an appointment")
+        time.sleep(4)
+        appointment.click_book_appointment()
         time.sleep(5)
+
+
+
 
 
 
