@@ -89,8 +89,8 @@ class TestLoginSuite:
         time.sleep(5)
         h2_tag_4 = self.driver.find_element(By.TAG_NAME, 'h2') ## after valid scheduling Appointment Confirmation
         assert h2_tag_4.text == "Appointment Confirmation", f"expected 'Appointment Confirmation' but got {h2_tag_4.text}" ## making sure we the test pass
-        redirect = self.driver.find_element(By.CLASS_NAME,"btn btn-default")
-        redirect.click() ## click
+        redirect = self.driver.find_element(By.XPATH,"//a[normalize-space()='Go to Homepage']")
+        redirect.click() ##
 
 
 
