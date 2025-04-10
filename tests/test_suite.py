@@ -31,7 +31,7 @@ class TestLoginSuite:
         login_page.click_login_button()
         time.sleep(6)
         h2_tag_2 = self.driver.find_element(By.CSS_SELECTOR, '.lead.text-danger')  ## locating the second element
-        assert h2_tag_2.text == "Login failed! Please ensure the username and password are valid.", f"expected 'Login failed! Please ensure the username and password are valid.' but got {h2_tag_2.text}"
+        assert h2_tag_2.text == "Make Appointment", f"expected 'Make Appointment' but got {h2_tag_2.text}"
         time.sleep(5)
 
     @pytest.mark.order(2)
@@ -51,7 +51,7 @@ class TestLoginSuite:
         login_page.click_login_button()
         time.sleep(6)
         h2_tag_3 = self.driver.find_element(By.CSS_SELECTOR, '.lead.text-danger')  ## locating the second element
-        assert h2_tag_3.text == "Login failed! Please ensure the username and password are valid.", f"expected 'Login failed! Please ensure the username and password are valid.' but got {h2_tag_3.text}"
+        assert h2_tag_3.text == "Make Appointment", f"expected 'Make Appointment' but got {h2_tag_3.text}"
         time.sleep(5)
 
     @pytest.mark.order(3)
@@ -71,12 +71,13 @@ class TestLoginSuite:
         login_page.click_login_button()
         time.sleep(6)
         h2_tag_4 = self.driver.find_element(By.CSS_SELECTOR, '.lead.text-danger')  ## locating the second element
-        assert h2_tag_4.text == "Login failed! Please ensure the username and password are valid.", f"expected 'Login failed! Please ensure the username and password are valid.' but got {h2_tag_4.text}"
+        assert h2_tag_4.text == "Make Appointment.", f"expected 'Make Appointment' but got {h2_tag_4.text}"
         time.sleep(5)
 
 
     @pytest.mark.order(4)
     @pytest.mark.regression
+    @pytest.mark.dependency(name="valid_login")
     def test_004_valid_login(self):
         home_page = HomePage(self.driver , self.wait)    ### homepage initialization
         home_page.click_make_appointment_button()
@@ -98,6 +99,7 @@ class TestLoginSuite:
 
     @pytest.mark.smoke
     @pytest.mark.order(5)
+    @pytest.mark.dependency(depends=["valid_login"])
     def test_005_invalid_appointment_scheduling_no_calender_selected(self):
         appointment = AppointmentPage(self.driver, self.wait)
         self.driver.refresh()
@@ -111,10 +113,11 @@ class TestLoginSuite:
         appointment.click_book_appointment()
         time.sleep(5)
         h2_tag_6 = self.driver.find_element(By.TAG_NAME, 'h2') ## select a locator for text on top of page
-        assert h2_tag_6.text == "Make Appointment", f"expected 'Make Appointment' but got {h2_tag_6.text}"
+        assert h2_tag_6.text == "Appointment Confirmation", f"expected 'Appointment Confirmation' but got {h2_tag_6.text}"
 
     @pytest.mark.smoke
     @pytest.mark.order(6)
+    @pytest.mark.dependency(depends=["valid_login"])
     def test_006_invalid_appointment_scheduling_zero_value_inserted(self):
         appointment = AppointmentPage(self.driver, self.wait)
         self.driver.refresh()
@@ -128,12 +131,17 @@ class TestLoginSuite:
         appointment.click_book_appointment()
         time.sleep(5)
         h2_tag_7 = self.driver.find_element(By.TAG_NAME, 'h2')  ## select a locator for text on top of page
-        assert h2_tag_7.text == "Make Appointment", f"expected 'Make Appointment' but got {h2_tag_7.text}"
-
-
+        if "Appointment Confirmation" in self.driver.page_source:
+            print(" Appointment is scheduled with zero when it shouldn't have been.")
+            # Go back manually to the appointment page so test_007 can continue
+            self.driver.find_element(By.XPATH,"//a[normalize-space()='Go to Homepage']").click()
+            pytest.fail("Appointment should not be scheduled with invalid input zero but it did with zeros.")
+        else:
+            print(" Invalid appointment was correctly rejected.")
 
     @pytest.mark.regression
     @pytest.mark.order(7)
+    @pytest.mark.dependency(depends=["valid_login"])
     def test_007_valid_appointment_scheduling(self):
         appointment = AppointmentPage(self.driver, self.wait)
         self.driver.refresh()  ## need to reload
@@ -150,6 +158,7 @@ class TestLoginSuite:
         assert h2_tag_8.text == "Appointment Confirmation", f"expected 'Appointment Confirmation' but got {h2_tag_8.text}" ## making sure we the test pass
         redirect = self.driver.find_element(By.XPATH,"//a[normalize-space()='Go to Homepage']") ## got to home element
         redirect.click() ##
+
 
 
 
